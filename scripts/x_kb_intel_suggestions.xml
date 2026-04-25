@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  UI Macro: x_kb_intel_suggestions
+  Application: KB Intelligence
+
+  Renders a side-panel formatter on the incident form showing the most recent
+  suggestions logged by ResolutionSuggester. Add this as a Form Layout
+  "Formatter" element on the incident form.
+
+  Steps to install:
+    1. System UI → UI Macros → New
+       Name: x_kb_intel_suggestions
+       Application: KB Intelligence (must be in this scope)
+       XML: paste the entire <j:jelly> block below
+       Active: true
+    2. System UI → Formatters → New
+       Name: KB Intelligence Suggestions
+       Table: incident
+       Formatter: x_kb_intel_suggestions
+    3. Configure form layout for incident → drag the formatter onto the form
+       (or place via Form Layout's Available list).
+-->
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+  <g:evaluate var="jvar_suggestions" jelly="true">
+    var out = [];
+    var gr = new GlideRecord('x_kb_intel_suggestion_log');
+    gr.addQuery('incident', current.sys_id);
+    gr.orderByDesc('suggested_at');
+    gr.setLimit(1);
+    gr.query();
+    if (gr.next()) {
+      try { out = JSON.parse(gr.getValue('suggested_kbs') || '[]'); } catch(e) {}
+    }
+    out;
+  </g:evaluate>
+
+  <div style="border:1px solid #d0d7de;padding:12px;border-radius:6px;background:#f6f8fa;margin-bottom:8px;">
+    <h4 style="margin:0 0 8px 0;color:#0969da;">⚡ Similar Past Resolutions (L2 / L3 Hint)</h4>
+
+    <j:if test="${empty(jvar_suggestions)}">
+      <em style="color:#57606a;">No suggestions yet — assign to a group, save the form, then refresh to trigger.</em>
+    </j:if>
+
+    <j:forEach var="jvar_sug" items="${jvar_suggestions}">
+      <div style="margin-bottom:10px;border-left:3px solid #0969da;padding-left:8px;">
+        <div>
+          <strong>
+            <a href="incident.do?sys_id=${jvar_sug.incident_sys_id}" target="_blank">${jvar_sug.incident_number}</a>
+          </strong>
+          <span style="color:#57606a;font-size:0.9em;"> (similarity ${jvar_sug.score})</span>
+        </div>
+        <div style="margin:4px 0;">${jvar_sug.short_description}</div>
+        <details style="margin-top:4px;">
+          <summary style="cursor:pointer;color:#57606a;">Resolution notes</summary>
+          <pre style="white-space:pre-wrap;background:#fff;padding:8px;border:1px solid #eee;border-radius:4px;font-size:0.9em;">${jvar_sug.close_notes}</pre>
+        </details>
+        <j:if test="${!empty(jvar_sug.kb_sys_id)}">
+          <div style="margin-top:4px;">
+            <a href="kb_view.do?sysparm_article=${jvar_sug.kb_sys_id}" target="_blank">📖 View linked KB →</a>
+          </div>
+        </j:if>
+      </div>
+    </j:forEach>
+  </div>
+</j:jelly>
