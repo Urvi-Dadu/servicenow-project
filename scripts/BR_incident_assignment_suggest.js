@@ -24,7 +24,7 @@
 
     var sysId = current.getUniqueValue();
     try {
-        new x_kb_intel.ResolutionSuggester().suggestForIncident(sysId);
+        new x_1158634_kb_int_0.ResolutionSuggester().suggestForIncident(sysId);
     } catch (e) {
         gs.error('BR_incident_assignment_suggest: ' + e.message);
     }

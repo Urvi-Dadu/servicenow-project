@@ -1,12 +1,12 @@
 # Data Model — Custom Tables Reference
 
-All tables live in scope **`x_kb_intel`**. Build via **System Definition → Tables → New** *after* creating the scoped app in Phase 2 of `implementation.md`.
+All tables live in scope **`x_1158634_kb_int_0`**. Build via **System Definition → Tables → New** *after* creating the scoped app in Phase 2 of `implementation.md`.
 
-> **Note on naming:** The table prefix `x_kb_intel_` is auto-applied by ServiceNow for every table you create *while inside the scoped app context*. So when the form asks for "Name", just enter `cluster` (not the full prefixed name).
+> **Note on naming:** The table prefix `x_1158634_kb_int_0_` is auto-applied by ServiceNow for every table you create *while inside the scoped app context*. So when the form asks for "Name", just enter `cluster` (not the full prefixed name).
 
 ---
 
-## Table 1: `x_kb_intel_cluster`
+## Table 1: `x_1158634_kb_int_0_cluster`
 
 **Label:** Incident Cluster
 **Extends:** None (base table)
@@ -34,7 +34,7 @@ draft_pending  — draft generated, awaiting review
 
 ---
 
-## Table 2: `x_kb_intel_dev_capture`
+## Table 2: `x_1158634_kb_int_0_dev_capture`
 
 **Label:** Developer Capture
 **Extends:** None
@@ -58,7 +58,7 @@ draft_pending  — draft generated, awaiting review
 | Config details        | `config_details`      | String              | 2000                       | sys_property / ACL / table / etc.     |
 | Validation steps      | `validation_steps`    | String              | 2000                       | How you tested it                     |
 | Related items         | `related_items`       | String              | 2000                       | Links to commits, tickets, designs    |
-| Generated draft       | `generated_draft`     | Reference           | → `x_kb_intel_kb_draft`    | Set after submit → process            |
+| Generated draft       | `generated_draft`     | Reference           | → `x_1158634_kb_int_0_kb_draft`    | Set after submit → process            |
 | State                 | `state`               | Choice              | draft / submitted / processed / cancelled | See below          |
 
 **Choice list — `state`:**
@@ -71,7 +71,7 @@ cancelled   — abandoned
 
 ---
 
-## Table 3: `x_kb_intel_kb_draft`
+## Table 3: `x_1158634_kb_int_0_kb_draft`
 
 **Label:** KB Draft
 **Extends:** None
@@ -83,10 +83,10 @@ cancelled   — abandoned
 | Summary               | `summary`               | String              | 1000                              | LLM-generated                      |
 | Body                  | `body`                  | HTML                | (large)                           | Article HTML                       |
 | Source type           | `source_type`           | Choice              | incident_cluster / story / dev_capture | What was fed to LLM           |
-| Source cluster        | `source_cluster`        | Reference           | → `x_kb_intel_cluster`            |                                    |
+| Source cluster        | `source_cluster`        | Reference           | → `x_1158634_kb_int_0_cluster`            |                                    |
 | Source story          | `source_story`          | Reference           | → `rm_story`                      |                                    |
 | Source incident       | `source_incident`       | Reference           | → `incident`                      |                                    |
-| Source dev capture    | `source_dev_capture`    | Reference           | → `x_kb_intel_dev_capture`        |                                    |
+| Source dev capture    | `source_dev_capture`    | Reference           | → `x_1158634_kb_int_0_dev_capture`        |                                    |
 | Resolver              | `resolver`              | Reference           | → `sys_user`                      | Author / authority                 |
 | Review state          | `review_state`          | Choice              | draft / in_review / approved / rejected / published | See below |
 | Published KB          | `published_kb`          | Reference           | → `kb_knowledge`                  | Set when approved & published      |
@@ -108,7 +108,7 @@ published   — kb_knowledge created, link in published_kb
 
 ---
 
-## Table 4: `x_kb_intel_suggestion_log`
+## Table 4: `x_1158634_kb_int_0_suggestion_log`
 
 **Label:** Suggestion Log
 **Extends:** None
@@ -146,18 +146,18 @@ Created in Phase 4 via **System Properties → New** (within scoped app):
 
 | Property name                                | Type                | Default                          | Purpose                                  |
 | -------------------------------------------- | ------------------- | -------------------------------- | ---------------------------------------- |
-| `x_kb_intel.gemini_api_key`                  | password 2 (encrypted) | (set manually)                | Google Gemini API key (AIza...)          |
-| `x_kb_intel.default_model`                   | string              | `gemini-2.5-flash`               | Default LLM for KB drafting              |
-| `x_kb_intel.story_model`                     | string              | `gemini-2.5-pro`                 | Higher-quality model for story KBs       |
-| `x_kb_intel.cluster_solution_name`           | string              | `incident_cluster_l2l3`          | PI Cluster Solution name                 |
-| `x_kb_intel.similarity_solution_name`        | string              | `incident_similarity_l2l3`       | PI Similarity Solution name              |
-| `x_kb_intel.min_cluster_size`                | integer             | `5`                              | Min cluster size to flag as "gap"        |
-| `x_kb_intel.lookback_days`                   | integer             | `365`                            | Window for incident clustering           |
-| `x_kb_intel.suggestion_top_n`                | integer             | `3`                              | Top-N similar incidents to surface       |
-| `x_kb_intel.target_kb_base`                  | string              | (sys_id of `kb_knowledge_base`)  | Where published KBs land                 |
-| `x_kb_intel.knowledge_manager_group`         | string              | (sys_id of group)                | Whom to notify for review                |
-| `x_kb_intel.llm_provider`                    | string              | `gemini`                         | Phase 17 only: set to `now_assist` to route via Now Assist |
-| `x_kb_intel.now_assist_capability_id`        | string              | (set in Phase 17)                | Phase 17 only: published Now Assist capability sys_id |
+| `x_1158634_kb_int_0.gemini_api_key`                  | password 2 (encrypted) | (set manually)                | Google Gemini API key (AIza...)          |
+| `x_1158634_kb_int_0.default_model`                   | string              | `gemini-2.5-flash`               | Default LLM for KB drafting              |
+| `x_1158634_kb_int_0.story_model`                     | string              | `gemini-2.5-pro`                 | Higher-quality model for story KBs       |
+| `x_1158634_kb_int_0.cluster_solution_name`           | string              | `incident_cluster_l2l3`          | PI Cluster Solution name                 |
+| `x_1158634_kb_int_0.similarity_solution_name`        | string              | `incident_similarity_l2l3`       | PI Similarity Solution name              |
+| `x_1158634_kb_int_0.min_cluster_size`                | integer             | `5`                              | Min cluster size to flag as "gap"        |
+| `x_1158634_kb_int_0.lookback_days`                   | integer             | `365`                            | Window for incident clustering           |
+| `x_1158634_kb_int_0.suggestion_top_n`                | integer             | `3`                              | Top-N similar incidents to surface       |
+| `x_1158634_kb_int_0.target_kb_base`                  | string              | (sys_id of `kb_knowledge_base`)  | Where published KBs land                 |
+| `x_1158634_kb_int_0.knowledge_manager_group`         | string              | (sys_id of group)                | Whom to notify for review                |
+| `x_1158634_kb_int_0.llm_provider`                    | string              | `gemini`                         | Phase 17 only: set to `now_assist` to route via Now Assist |
+| `x_1158634_kb_int_0.now_assist_capability_id`        | string              | (set in Phase 17)                | Phase 17 only: published Now Assist capability sys_id |
 
 ---
 
@@ -165,10 +165,10 @@ Created in Phase 4 via **System Properties → New** (within scoped app):
 
 ```
 incident ─────────┐
-                  ├──→ x_kb_intel_cluster ──→ x_kb_intel_kb_draft ──→ kb_knowledge
-                  ├──→ x_kb_intel_dev_capture ──┘
+                  ├──→ x_1158634_kb_int_0_cluster ──→ x_1158634_kb_int_0_kb_draft ──→ kb_knowledge
+                  ├──→ x_1158634_kb_int_0_dev_capture ──┘
 rm_story ─────────┤
-                  └──→ x_kb_intel_dev_capture ──→ x_kb_intel_kb_draft ──→ kb_knowledge
+                  └──→ x_1158634_kb_int_0_dev_capture ──→ x_1158634_kb_int_0_kb_draft ──→ kb_knowledge
 
-incident ──→ x_kb_intel_suggestion_log ──→ kb_knowledge (accepted)
+incident ──→ x_1158634_kb_int_0_suggestion_log ──→ kb_knowledge (accepted)
 ```

@@ -7,7 +7,7 @@
                 │                    ServiceNow Instance                    │
                 │                                                            │
    ┌──────────┐ │  ┌───────────────┐    ┌──────────────────┐                │
-   │ Resolved │─┼─▶│ Predictive    │───▶│ x_kb_intel_      │                │
+   │ Resolved │─┼─▶│ Predictive    │───▶│ x_1158634_kb_int_0_      │                │
    │ Incidents│ │  │ Intelligence  │    │ cluster (custom) │                │
    └──────────┘ │  │ (clustering)  │    └────────┬─────────┘                │
                 │  └───────────────┘             │                           │
@@ -19,12 +19,12 @@
                 │                       └──────────────────┘  │             │
                 │                                              │             │
    ┌──────────┐ │   on close   ┌──────────────────┐           │             │
-   │ Incident │─┼─────────────▶│ x_kb_intel_      │           │             │
+   │ Incident │─┼─────────────▶│ x_1158634_kb_int_0_      │           │             │
    │ resolver │ │ "Capture for │ dev_capture      │───────────┤             │
    └──────────┘ │   KB" UA     └──────────────────┘           │             │
                 │                                              ▼             │
    ┌──────────┐ │   on close   ┌──────────────────┐    ┌──────────────────┐ │
-   │  Story   │─┼─────────────▶│ Capture form     │───▶│ x_kb_intel_kb_   │ │
+   │  Story   │─┼─────────────▶│ Capture form     │───▶│ x_1158634_kb_int_0_kb_   │ │
    │developer │ │   complete   │ (developer brief)│    │ draft (custom)   │ │
    └──────────┘ │              └──────────────────┘    └────────┬─────────┘ │
                 │                                                │           │
@@ -67,10 +67,10 @@
 | `KBDraftBuilder`                   | Script Include        | Assembles prompt, calls LLM, persists draft                          |
 | `ResolutionSuggester`              | Script Include        | On new incident, finds top-N similar resolved incidents              |
 | `DevOpsContextFetcher`             | Script Include        | (Stretch) Pulls commits/files linked to a story                      |
-| `x_kb_intel_cluster`               | Custom table          | One row per detected cluster of similar incidents                    |
-| `x_kb_intel_dev_capture`           | Custom table          | Developer's structured brief (inputs to LLM)                         |
-| `x_kb_intel_kb_draft`              | Custom table          | LLM-generated draft awaiting review                                  |
-| `x_kb_intel_suggestion_log`        | Custom table          | Audit log of suggestions for measurement                             |
+| `x_1158634_kb_int_0_cluster`               | Custom table          | One row per detected cluster of similar incidents                    |
+| `x_1158634_kb_int_0_dev_capture`           | Custom table          | Developer's structured brief (inputs to LLM)                         |
+| `x_1158634_kb_int_0_kb_draft`              | Custom table          | LLM-generated draft awaiting review                                  |
+| `x_1158634_kb_int_0_suggestion_log`        | Custom table          | Audit log of suggestions for measurement                             |
 | `BR_incident_assignment_suggest`   | Business Rule         | On assignment_group change → run ResolutionSuggester                 |
 | `BR_story_closure_capture`         | Business Rule         | On story `Closed Complete` → create dev_capture record               |
 | `BR_devcapture_submitted`          | Business Rule         | On dev_capture state=submitted → call KBDraftBuilder                 |
@@ -78,7 +78,7 @@
 | `UA_devcapture_submit`             | UI Action             | "Submit for KB Generation" on dev_capture form                       |
 | `UA_kbdraft_approve`               | UI Action             | "Approve & Publish" on draft → creates kb_knowledge                  |
 | `SJ_weekly_cluster_run`            | Scheduled Job         | Weekly: rerun clustering + generate drafts for new gaps              |
-| `x_kb_intel_suggestions` (formatter)| UI Macro             | Renders suggestion side panel on incident form                       |
+| `x_1158634_kb_int_0_suggestions` (formatter)| UI Macro             | Renders suggestion side panel on incident form                       |
 
 ## Tech stack quick reference
 
@@ -105,8 +105,8 @@ Swapping is a single-Script-Include paste — see [implementation.md § Phase 17
 
 ## Key design decisions
 
-1. **Scoped app (`x_kb_intel`):** keeps custom tables, scripts, and properties isolated; trivial to package and move between instances via Update Set or App Repo.
-2. **Drafts before publish:** Every LLM output goes to `x_kb_intel_kb_draft` for human review. Never auto-publishes.
+1. **Scoped app (`x_1158634_kb_int_0`):** keeps custom tables, scripts, and properties isolated; trivial to package and move between instances via Update Set or App Repo.
+2. **Drafts before publish:** Every LLM output goes to `x_1158634_kb_int_0_kb_draft` for human review. Never auto-publishes.
 3. **Token usage tracked per draft:** `llm_tokens_in` and `llm_tokens_out` on the draft table — easy cost reporting.
 4. **PI is recommended but not required:** Both `IncidentClusterEngine` and `ResolutionSuggester` have keyword-based fallback paths so the project works on any PDI, even before PI solutions are trained.
 5. **Story KB uses `gemini-2.5-pro` by default:** Story content is high-stakes (contains code snippets, workflow names) — quality matters more than throughput, and Pro's 100/day free limit is plenty for story closures.

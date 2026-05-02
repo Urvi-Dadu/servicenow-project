@@ -1,6 +1,6 @@
 /**
  * UI Action: Reject Draft
- * Table: x_kb_intel_kb_draft
+ * Table: x_1158634_kb_int_0_kb_draft
  * Action name: reject_draft
  * Form button: true
  * Show insert: false
@@ -21,7 +21,7 @@
     current.update();
 
     if (!current.source_cluster.nil()) {
-        var clusterGr = new GlideRecord('x_kb_intel_cluster');
+        var clusterGr = new GlideRecord('x_1158634_kb_int_0_cluster');
         if (clusterGr.get(current.getValue('source_cluster'))) {
             clusterGr.setValue('status', 'dismissed');
             clusterGr.update();

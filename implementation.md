@@ -45,7 +45,7 @@ Resolved incidents (last 12 months)
 [Weekly scheduled job]
         │
         ▼
-IncidentClusterEngine ─→ groups similar incidents into x_kb_intel_cluster
+IncidentClusterEngine ─→ groups similar incidents into x_1158634_kb_int_0_cluster
         │
         ▼
 For each cluster with no KB and ≥ 5 members:
@@ -57,7 +57,7 @@ KBDraftBuilder.buildFromCluster()
 Gemini API call (gemini-2.5-flash, JSON mode)
         │
         ▼
-x_kb_intel_kb_draft (review_state = draft)
+x_1158634_kb_int_0_kb_draft (review_state = draft)
         │
         ▼
 [Email Knowledge Manager group]
@@ -81,7 +81,7 @@ ResolutionSuggester.suggestForIncident()
 Top 3 similar resolved incidents + linked KBs
         │
         ▼
-x_kb_intel_suggestion_log (audit row)
+x_1158634_kb_int_0_suggestion_log (audit row)
         │
         ▼
 [UI Macro on incident form reads from log]
@@ -99,7 +99,7 @@ L2/L3 engineer sees side panel: "Similar Past Resolutions"
    "Capture for KB"                       [BR_story_closure_capture async]
    UI Action click                                   │
           │                                          ▼
-          └────────→ x_kb_intel_dev_capture ◀─── pre-fills problem_brief
+          └────────→ x_1158634_kb_int_0_dev_capture ◀─── pre-fills problem_brief
                             │
                             ▼
                 Developer fills 5–9 fields
@@ -124,7 +124,7 @@ L2/L3 engineer sees side panel: "Similar Past Resolutions"
                   │                    │
                   └─────────┬──────────┘
                             ▼
-                 x_kb_intel_kb_draft
+                 x_1158634_kb_int_0_kb_draft
                             │
                             ▼
                 Same review/publish path as Workflow A
@@ -164,7 +164,7 @@ If you don't already have one:
 3. Choose **Start from scratch**.
 4. Fill in:
    - **Name:** `KB Intelligence`
-   - **Scope:** `x_kb_intel` *(if your namespace is non-default ServiceNow may prefix with your company-id; that's fine — the rest of this guide assumes `x_kb_intel`. If yours differs, replace `x_kb_intel` everywhere with your scope.)*
+   - **Scope:** `x_1158634_kb_int_0` *(if your namespace is non-default ServiceNow may prefix with your company-id; that's fine — the rest of this guide assumes `x_1158634_kb_int_0`. If yours differs, replace `x_1158634_kb_int_0` everywhere with your scope.)*
    - **Version:** `1.0.0`
    - **Description:** `Predictive resolution assistant + auto-KB generator for L2/L3`
 5. Click **Create**.
@@ -181,36 +181,36 @@ Top-right corner of ServiceNow → "Application Picker". Make sure it says **KB 
 
 Create four tables. For each: **Studio → Create Application File → Table**, or via list view **System Definition → Tables → New**.
 
-> While in scope `x_kb_intel`, ServiceNow auto-prefixes table names. So when the form asks for "Name", enter just `cluster` (not `x_kb_intel_cluster`).
+> While in scope `x_1158634_kb_int_0`, ServiceNow auto-prefixes table names. So when the form asks for "Name", enter just `cluster` (not `x_1158634_kb_int_0_cluster`).
 
 Detailed field-by-field reference is in [data-model.md](data-model.md). Below is the minimum step set.
 
-### 3.1 Table: `cluster` → becomes `x_kb_intel_cluster`
+### 3.1 Table: `cluster` → becomes `x_1158634_kb_int_0_cluster`
 
 - Label: **Incident Cluster**
 - Extends: *(none)*
-- Add columns per [data-model.md § Table 1](data-model.md#table-1-x_kb_intel_cluster).
+- Add columns per [data-model.md § Table 1](data-model.md#table-1-x_1158634_kb_int_0_cluster).
 - For the `status` choice column, add the choice list: `open`, `has_kb`, `dismissed`, `draft_pending`.
 
-### 3.2 Table: `dev_capture` → becomes `x_kb_intel_dev_capture`
+### 3.2 Table: `dev_capture` → becomes `x_1158634_kb_int_0_dev_capture`
 
 - Label: **Developer Capture**
-- Add columns per [data-model.md § Table 2](data-model.md#table-2-x_kb_intel_dev_capture).
+- Add columns per [data-model.md § Table 2](data-model.md#table-2-x_1158634_kb_int_0_dev_capture).
 - For `state` choice column: `draft`, `submitted`, `processed`, `cancelled`.
 - For `source_type` choice column: `story`, `incident`, `problem`.
 - After saving, open the table form layout and arrange the fields into sections: **Source**, **Problem & Resolution**, **Changes** (workflow / scripts / configs toggles + their detail strings), **Validation**, **Related & State**.
 
-### 3.3 Table: `kb_draft` → becomes `x_kb_intel_kb_draft`
+### 3.3 Table: `kb_draft` → becomes `x_1158634_kb_int_0_kb_draft`
 
 - Label: **KB Draft**
-- Add columns per [data-model.md § Table 3](data-model.md#table-3-x_kb_intel_kb_draft).
+- Add columns per [data-model.md § Table 3](data-model.md#table-3-x_1158634_kb_int_0_kb_draft).
 - For `body`, change the field type to **HTML** (Editor type). This gives the KM a WYSIWYG editor for review/edit before publishing.
 - For `review_state` choice list: `draft`, `in_review`, `approved`, `rejected`, `published`.
 
-### 3.4 Table: `suggestion_log` → becomes `x_kb_intel_suggestion_log`
+### 3.4 Table: `suggestion_log` → becomes `x_1158634_kb_int_0_suggestion_log`
 
 - Label: **Suggestion Log**
-- Add columns per [data-model.md § Table 4](data-model.md#table-4-x_kb_intel_suggestion_log).
+- Add columns per [data-model.md § Table 4](data-model.md#table-4-x_1158634_kb_int_0_suggestion_log).
 - The `suggested_kbs` field stores JSON — type **String**, max length **8000**.
 
 ### 3.5 ACLs (recommended baseline)
@@ -219,14 +219,14 @@ Open each new table → **Access Controls** related list and create:
 
 | Table                       | Operation | Role required          |
 | --------------------------- | --------- | ---------------------- |
-| `x_kb_intel_cluster`        | read      | itil OR knowledge_manager |
-| `x_kb_intel_cluster`        | write     | knowledge_manager OR admin |
-| `x_kb_intel_dev_capture`    | read      | itil                   |
-| `x_kb_intel_dev_capture`    | write     | itil                   |
-| `x_kb_intel_kb_draft`       | read      | knowledge_manager OR admin |
-| `x_kb_intel_kb_draft`       | write     | knowledge_manager OR admin |
-| `x_kb_intel_suggestion_log` | read      | itil                   |
-| `x_kb_intel_suggestion_log` | write     | admin (auto-written by Script Include) |
+| `x_1158634_kb_int_0_cluster`        | read      | itil OR knowledge_manager |
+| `x_1158634_kb_int_0_cluster`        | write     | knowledge_manager OR admin |
+| `x_1158634_kb_int_0_dev_capture`    | read      | itil                   |
+| `x_1158634_kb_int_0_dev_capture`    | write     | itil                   |
+| `x_1158634_kb_int_0_kb_draft`       | read      | knowledge_manager OR admin |
+| `x_1158634_kb_int_0_kb_draft`       | write     | knowledge_manager OR admin |
+| `x_1158634_kb_int_0_suggestion_log` | read      | itil                   |
+| `x_1158634_kb_int_0_suggestion_log` | write     | admin (auto-written by Script Include) |
 
 ---
 
@@ -249,14 +249,14 @@ Navigate to **System Properties → New** (must be in scope `KB Intelligence`). 
 | `target_kb_base`          | string                | *sys_id of a `kb_knowledge_base` record* (see 4.2) |
 | `knowledge_manager_group` | string                | *sys_id of the Knowledge Managers group*           |
 
-> The full property name will appear as `x_kb_intel.<suffix>` because ServiceNow prepends the scope name automatically when you create the property in scope.
+> The full property name will appear as `x_1158634_kb_int_0.<suffix>` because ServiceNow prepends the scope name automatically when you create the property in scope.
 
 ### 4.2 Find the target KB base sys_id
 
 1. Navigate to **Knowledge → Administration → Knowledge Bases**.
 2. Pick (or create) the KB you want published articles to land in. **IT** is the default and works fine.
 3. Right-click the form header → **Copy sys_id**.
-4. Paste into `x_kb_intel.target_kb_base`.
+4. Paste into `x_1158634_kb_int_0.target_kb_base`.
 
 ### 4.3 Add the Gemini endpoint to outbound HTTP allow-list
 
@@ -290,7 +290,7 @@ For each file under [scripts/](scripts/) below: **System Definition → Script I
 Open **System Definition → Scripts - Background**. Paste:
 
 ```javascript
-var llm = new x_kb_intel.LLMConnector();
+var llm = new x_1158634_kb_int_0.LLMConnector();
 var r = llm.callGemini(
     'You are a helpful assistant. Output JSON only.',
     'Reply with a JSON object containing a "title" (string) and "body_html" (string with one <p> tag) describing the color blue.',
@@ -311,7 +311,7 @@ Run. You should see structured JSON output. If you see `NULL`, check **System Lo
 
 ```javascript
 // Manually create one cluster from your demo data, then build a draft from it.
-var cg = new GlideRecord('x_kb_intel_cluster');
+var cg = new GlideRecord('x_1158634_kb_int_0_cluster');
 cg.initialize();
 cg.setValue('name', 'manual_test_cluster');
 cg.setValue('summary', 'Outlook will not connect to Exchange after VPN');
@@ -326,11 +326,11 @@ if (rep.next()) cg.setValue('representative_incident', rep.getUniqueValue());
 var clusterId = cg.insert();
 gs.print('Cluster: ' + clusterId);
 
-var draftId = new x_kb_intel.KBDraftBuilder().buildFromCluster(clusterId);
+var draftId = new x_1158634_kb_int_0.KBDraftBuilder().buildFromCluster(clusterId);
 gs.print('Draft: ' + draftId);
 
 if (draftId) {
-    var d = new GlideRecord('x_kb_intel_kb_draft');
+    var d = new GlideRecord('x_1158634_kb_int_0_kb_draft');
     d.get(draftId);
     gs.print('Title: ' + d.getValue('title'));
     gs.print('Tokens in/out: ' + d.getValue('llm_tokens_in') + ' / ' + d.getValue('llm_tokens_out'));
@@ -349,7 +349,7 @@ This phase is **strongly recommended but not required** — both `IncidentCluste
 
 1. Navigate to **Predictive Intelligence → Solution Definitions → New**.
 2. **Solution type:** Clustering
-3. **Name:** `incident_cluster_l2l3`  *(must match `x_kb_intel.cluster_solution_name`)*
+3. **Name:** `incident_cluster_l2l3`  *(must match `x_1158634_kb_int_0.cluster_solution_name`)*
 4. **Table:** `incident`
 5. **Filter:**  `state IN (Resolved, Closed)` AND `close_notes IS NOT EMPTY` AND `sys_updated_on >= 12 months ago`
 6. **Input fields:** `short_description`, `description`, `category`
@@ -395,14 +395,14 @@ in **System Logs → Information** when the scheduled job runs. Accuracy is lowe
 
 Don't wait until Sunday. Open the job and click **Execute Now**. Watch **System Logs → Information** for `SJ_weekly_cluster_run:` lines. After ~5–10 minutes (depends on data + LLM speed), check:
 
-- `x_kb_intel_cluster` — should have rows with `status = open` or `draft_pending`
-- `x_kb_intel_kb_draft` — should have new drafts with `review_state = draft`
+- `x_1158634_kb_int_0_cluster` — should have rows with `status = open` or `draft_pending`
+- `x_1158634_kb_int_0_kb_draft` — should have new drafts with `review_state = draft`
 
 ---
 
 ## Phase 8 — Verify cluster KB drafting end-to-end
 
-Open one draft record from `x_kb_intel_kb_draft`. You should see:
+Open one draft record from `x_1158634_kb_int_0_kb_draft`. You should see:
 
 - A descriptive `title`
 - A summary one-liner
@@ -422,7 +422,7 @@ If the body looks malformed or generic, jump to [Appendix A](#appendix-a--troubl
 2. **Application:** KB Intelligence
 3. Settings:
    - **Name:** `Approve & Publish`
-   - **Table:** `x_kb_intel_kb_draft`
+   - **Table:** `x_1158634_kb_int_0_kb_draft`
    - **Action name:** `approve_and_publish`
    - **Form button:** ✓
    - **Show insert:** ✗
@@ -447,15 +447,15 @@ Same steps with:
 #### 9.3.1 Register the event
 
 1. **System Policy → Events → Registry → New**
-2. **Event name:** `x_kb_intel.draft.created`
-3. **Table:** `x_kb_intel_kb_draft`
+2. **Event name:** `x_1158634_kb_int_0.draft.created`
+3. **Table:** `x_1158634_kb_int_0_kb_draft`
 4. **Description:** *Fired when KBDraftBuilder inserts a new draft*
 
 #### 9.3.2 Create the Script Action
 
 1. **System Policy → Events → Script Actions → New**
 2. **Name:** `KB Draft Created Notify`
-3. **Event name:** `x_kb_intel.draft.created`
+3. **Event name:** `x_1158634_kb_int_0.draft.created`
 4. **Active:** yes
 5. **Script:** paste contents of [scripts/SA_draft_created_notify.js](scripts/SA_draft_created_notify.js)
 
@@ -464,7 +464,7 @@ Same steps with:
 Pick any draft → open → click **Approve & Publish**. You should:
 - Land on the new `kb_knowledge` record
 - See it has `workflow_state = published`
-- Confirm `x_kb_intel_kb_draft.review_state` flipped to `published` and `published_kb` is set
+- Confirm `x_1158634_kb_int_0_kb_draft.review_state` flipped to `published` and `published_kb` is set
 
 ---
 
@@ -491,17 +491,17 @@ This is the daily-driver feature for L2/L3 engineers. When an incident lands in 
 ### 10.2 Create the UI Macro
 
 1. **System UI → UI Macros → New**
-2. **Name:** `x_kb_intel_suggestions`
+2. **Name:** `x_1158634_kb_int_0_suggestions`
 3. **Application:** KB Intelligence
 4. **Active:** ✓
-5. **XML:** paste contents of [scripts/x_kb_intel_suggestions.xml](scripts/x_kb_intel_suggestions.xml)
+5. **XML:** paste contents of [scripts/x_1158634_kb_int_0_suggestions.xml](scripts/x_1158634_kb_int_0_suggestions.xml)
 
 ### 10.3 Create the Formatter
 
 1. **System UI → Formatters → New**
 2. **Name:** `KB Intelligence Suggestions`
 3. **Table:** `incident`
-4. **Formatter:** `x_kb_intel_suggestions`
+4. **Formatter:** `x_1158634_kb_int_0_suggestions`
 
 ### 10.4 Add the formatter to the incident form
 
@@ -553,7 +553,7 @@ Lets an L2/L3 engineer who just resolved a complex incident capture deep technic
 1. **System UI → UI Actions → New**
 2. Settings:
    - **Name:** `Submit for KB Generation`
-   - **Table:** `x_kb_intel_dev_capture`
+   - **Table:** `x_1158634_kb_int_0_dev_capture`
    - **Action name:** `submit_for_kb_generation`
    - **Form button:** ✓
    - **Show update:** ✓
@@ -567,7 +567,7 @@ Lets an L2/L3 engineer who just resolved a complex incident capture deep technic
 1. **System Definition → Business Rules → New**
 2. Settings:
    - **Name:** `Dev Capture Submitted → Generate Draft`
-   - **Table:** `x_kb_intel_dev_capture`
+   - **Table:** `x_1158634_kb_int_0_dev_capture`
    - **When:** after, **Update:** ✓
    - **Async:** ✓
    - **Filter conditions:** `State changes to submitted`
@@ -632,26 +632,26 @@ Note the value for "Complete" or "Closed Complete" (commonly `'4'` or `'closed_c
 #### 12.4.1 Register event
 
 **System Policy → Events → Registry → New**:
-- **Event name:** `x_kb_intel.story.capture_request`
-- **Table:** `x_kb_intel_dev_capture`
+- **Event name:** `x_1158634_kb_int_0.story.capture_request`
+- **Table:** `x_1158634_kb_int_0_dev_capture`
 
 #### 12.4.2 Script Action
 
 **System Policy → Events → Script Actions → New**:
 - **Name:** `Story Capture Request Notify`
-- **Event name:** `x_kb_intel.story.capture_request`
+- **Event name:** `x_1158634_kb_int_0.story.capture_request`
 - **Script:** paste [scripts/SA_story_capture_request.js](scripts/SA_story_capture_request.js)
 
 ### 12.5 Test
 
 1. Open any open story in `rm_story.list`.
 2. Set **State** = Complete → Save.
-3. Wait a few seconds. Check **x_kb_intel_dev_capture** list — there should be a new row with `source_type=story`, `source_story` set to your story, `state=draft`.
+3. Wait a few seconds. Check **x_1158634_kb_int_0_dev_capture** list — there should be a new row with `source_type=story`, `source_story` set to your story, `state=draft`.
 4. The developer (whoever was `assigned_to` on the story) should receive an email pointing to the capture form.
 5. Open the capture form, fill in a brief, click **Submit for KB Generation**.
 6. Wait ~30s — the generated draft is linked back via `generated_draft`.
 
-The draft body for a story KB will use **gemini-2.5-pro** (per `x_kb_intel.story_model`) and follow the developer-capture system prompt in [prompts.md § P3](prompts.md#p3--developer-capture-system-prompt) — meaning it will have section headers for *Workflow Changes*, *Script / Code Changes* (with before/after blocks if the developer wrote enough), *Configuration Changes*, *Validation Steps*, and *Rollback / Watch-outs*.
+The draft body for a story KB will use **gemini-2.5-pro** (per `x_1158634_kb_int_0.story_model`) and follow the developer-capture system prompt in [prompts.md § P3](prompts.md#p3--developer-capture-system-prompt) — meaning it will have section headers for *Workflow Changes*, *Script / Code Changes* (with before/after blocks if the developer wrote enough), *Configuration Changes*, *Validation Steps*, and *Rollback / Watch-outs*.
 
 ---
 
@@ -665,7 +665,7 @@ If you want to test this:
 1. Install the ServiceNow DevOps plugin.
 2. Set up a Git tool integration (GitHub or GitLab) per ServiceNow's DevOps setup guide.
 3. Make a story, link a commit to it.
-4. Run the story-closure flow — verify the user prompt logged to the `x_kb_intel_kb_draft.body` is more detailed.
+4. Run the story-closure flow — verify the user prompt logged to the `x_1158634_kb_int_0_kb_draft.body` is more detailed.
 
 If you're on a PDI without DevOps, **skip this phase** — the rest of the project still works.
 
@@ -680,20 +680,20 @@ Two key metrics to track:
 If you have Performance Analytics:
 1. **Performance Analytics → Indicators → New**
 2. **Name:** `KB drafts published`
-3. **Facts table:** `x_kb_intel_kb_draft`
+3. **Facts table:** `x_1158634_kb_int_0_kb_draft`
 4. **Conditions:** `review_state = published`
 5. **Aggregate:** Count
 6. **Frequency:** Daily (collected nightly)
 
 If you don't have PA, just create a **Report** (System UI → Reports):
 - **Type:** Bar
-- **Source:** `x_kb_intel_kb_draft`
+- **Source:** `x_1158634_kb_int_0_kb_draft`
 - **Group by:** `generated_at` (trended weekly)
 - **Filter:** `review_state = published`
 
 ### Indicator 2 — MTTR with vs without suggestion
 
-This is the value-prop indicator. Build a report on `x_kb_intel_suggestion_log`:
+This is the value-prop indicator. Build a report on `x_1158634_kb_int_0_suggestion_log`:
 - **Group by:** `accepted_kb` is empty / not empty
 - **Aggregate:** Average of `resolution_minutes`
 
@@ -701,7 +701,7 @@ If MTTR is materially lower for incidents where the resolver clicked an accepted
 
 ### Indicator 3 — Token cost (if you upgrade to paid Gemini)
 
-Sum `llm_tokens_in` + `llm_tokens_out` per week from `x_kb_intel_kb_draft`. Multiply by current Gemini per-token pricing.
+Sum `llm_tokens_in` + `llm_tokens_out` per week from `x_1158634_kb_int_0_kb_draft`. Multiply by current Gemini per-token pricing.
 
 ---
 
@@ -881,7 +881,7 @@ Single step: paste the original [scripts/LLMConnector.js](scripts/LLMConnector.j
 ### Suggestion panel empty after assignment
 
 - The Business Rule is async — wait 5–10 seconds and refresh the form.
-- Check `x_kb_intel_suggestion_log` directly. Is there a row for this incident? If yes but the `suggested_kbs` JSON is `[]`, the suggester found nothing — check that you have closed incidents in the same `category` with non-empty `close_notes`.
+- Check `x_1158634_kb_int_0_suggestion_log` directly. Is there a row for this incident? If yes but the `suggested_kbs` JSON is `[]`, the suggester found nothing — check that you have closed incidents in the same `category` with non-empty `close_notes`.
 - Check the Business Rule is **active** and on table `incident`.
 
 ### Story closure doesn't create a dev capture
@@ -892,7 +892,7 @@ Single step: paste the original [scripts/LLMConnector.js](scripts/LLMConnector.j
 
 ### Tables prefixed wrong
 
-- If your scope is something like `x_42851_kb_intel` instead of `x_kb_intel`, all table names in this guide are off by that prefix. Fix it once: rename your scope, or accept the longer prefix and find/replace it in every script file before pasting.
+- If your scope is something like `x_42851_kb_intel` instead of `x_1158634_kb_int_0`, all table names in this guide are off by that prefix. Fix it once: rename your scope, or accept the longer prefix and find/replace it in every script file before pasting.
 
 ---
 

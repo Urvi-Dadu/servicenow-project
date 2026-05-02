@@ -1,6 +1,6 @@
 /**
  * Business Rule: Dev Capture Submitted → Generate Draft
- * Table: x_kb_intel_dev_capture
+ * Table: x_1158634_kb_int_0_dev_capture
  * When: after
  * Update: true
  * Order: 1000
@@ -19,7 +19,7 @@
     if (previous && previous.getValue('state') === 'submitted') return; // already handled
 
     try {
-        var draftId = new x_kb_intel.KBDraftBuilder().buildFromDevCapture(current.getUniqueValue());
+        var draftId = new x_1158634_kb_int_0.KBDraftBuilder().buildFromDevCapture(current.getUniqueValue());
         if (!draftId) {
             gs.warn('BR_devcapture_submitted: build returned null for ' + current.getUniqueValue());
             // Bounce back so the user can retry

@@ -1,6 +1,6 @@
 /**
  * Script Include: DevOpsContextFetcher
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: This application scope only
  * Active: true
  *
@@ -13,7 +13,7 @@
  *   - sn_devops_change_artifact (older)
  *
  * USAGE:
- *   var commits = new x_kb_intel.DevOpsContextFetcher().fetchForStory(storySysId);
+ *   var commits = new x_1158634_kb_int_0.DevOpsContextFetcher().fetchForStory(storySysId);
  *   // returns: [{ hash, message, author, files }]
  */
 var DevOpsContextFetcher = Class.create();

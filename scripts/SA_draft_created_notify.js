@@ -1,6 +1,6 @@
 /**
  * Script Action: KB Draft Created Notification
- * Event name: x_kb_intel.draft.created
+ * Event name: x_1158634_kb_int_0.draft.created
  * Active: true
  *
  * Triggered by KBDraftBuilder when a new draft is inserted.
@@ -14,12 +14,12 @@
     var draftId = event.parm1 + '';
     var kind = event.parm2 + '';
 
-    var draftGr = new GlideRecord('x_kb_intel_kb_draft');
+    var draftGr = new GlideRecord('x_1158634_kb_int_0_kb_draft');
     if (!draftGr.get(draftId)) return;
 
-    var groupSysId = gs.getProperty('x_kb_intel.knowledge_manager_group');
+    var groupSysId = gs.getProperty('x_1158634_kb_int_0.knowledge_manager_group');
     if (!groupSysId) {
-        gs.warn('SA_draft_created_notify: x_kb_intel.knowledge_manager_group not set — skipping notification');
+        gs.warn('SA_draft_created_notify: x_1158634_kb_int_0.knowledge_manager_group not set — skipping notification');
         return;
     }
 
@@ -42,7 +42,7 @@
     }
 
     var subject = '[KB Intelligence] New ' + kind + '-sourced draft awaiting review: ' + draftGr.getValue('title');
-    var url = gs.getProperty('glide.servlet.uri') + 'x_kb_intel_kb_draft.do?sys_id=' + draftId;
+    var url = gs.getProperty('glide.servlet.uri') + 'x_1158634_kb_int_0_kb_draft.do?sys_id=' + draftId;
     var body = [
         'A new KB draft has been generated and needs Knowledge Manager review.',
         '',
@@ -53,7 +53,7 @@
         'Open the draft to review, edit, approve or reject:',
         url,
         '',
-        '— KB Intelligence (x_kb_intel)'
+        '— KB Intelligence (x_1158634_kb_int_0)'
     ].join('\n');
 
     var mail = new GlideEmailOutbound();

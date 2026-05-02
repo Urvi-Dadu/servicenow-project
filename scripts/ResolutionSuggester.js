@@ -1,24 +1,24 @@
 /**
  * Script Include: ResolutionSuggester
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: All application scopes
  * Active: true
  *
  * Given a new/in-progress incident, finds top-N similar resolved incidents
  * and any KB articles linked to them. Used by:
  *   - BR_incident_assignment_suggest (auto-trigger on assignment)
- *   - x_kb_intel_suggestions UI Macro (renders side panel on form)
+ *   - x_1158634_kb_int_0_suggestions UI Macro (renders side panel on form)
  *
  * Primary path:  Predictive Intelligence Similarity Solution
  * Fallback path: keyword-based GlideRecord query (always works)
  *
- * Logs every call to x_kb_intel_suggestion_log for measurement.
+ * Logs every call to x_1158634_kb_int_0_suggestion_log for measurement.
  */
 var ResolutionSuggester = Class.create();
 ResolutionSuggester.prototype = {
     initialize: function() {
-        this.solutionName = gs.getProperty('x_kb_intel.similarity_solution_name', 'incident_similarity_l2l3');
-        this.topN = parseInt(gs.getProperty('x_kb_intel.suggestion_top_n', '3'), 10);
+        this.solutionName = gs.getProperty('x_1158634_kb_int_0.similarity_solution_name', 'incident_similarity_l2l3');
+        this.topN = parseInt(gs.getProperty('x_1158634_kb_int_0.suggestion_top_n', '3'), 10);
     },
 
     /**
@@ -35,7 +35,7 @@ ResolutionSuggester.prototype = {
         }
 
         // Log for measurement (always, even empty)
-        var logGr = new GlideRecord('x_kb_intel_suggestion_log');
+        var logGr = new GlideRecord('x_1158634_kb_int_0_suggestion_log');
         logGr.initialize();
         logGr.setValue('incident', incidentSysId);
         logGr.setValue('suggested_kbs', JSON.stringify(results));

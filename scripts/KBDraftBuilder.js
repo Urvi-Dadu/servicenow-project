@@ -1,10 +1,10 @@
 /**
  * Script Include: KBDraftBuilder
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: This application scope only
  * Active: true
  *
- * Builds a draft KB article (x_kb_intel_kb_draft) by calling Gemini with
+ * Builds a draft KB article (x_1158634_kb_int_0_kb_draft) by calling Gemini with
  * either:
  *   1. A cluster of similar incidents → buildFromCluster(clusterSysId)
  *   2. A developer's structured capture → buildFromDevCapture(captureSysId)
@@ -15,15 +15,15 @@
 var KBDraftBuilder = Class.create();
 KBDraftBuilder.prototype = {
     initialize: function() {
-        this.llm = new x_kb_intel.LLMConnector();
-        this.storyModel = gs.getProperty('x_kb_intel.story_model', 'gemini-2.5-pro');
+        this.llm = new x_1158634_kb_int_0.LLMConnector();
+        this.storyModel = gs.getProperty('x_1158634_kb_int_0.story_model', 'gemini-2.5-pro');
     },
 
     // ============================================================
     // Public: build draft from incident cluster
     // ============================================================
     buildFromCluster: function(clusterSysId) {
-        var clusterGr = new GlideRecord('x_kb_intel_cluster');
+        var clusterGr = new GlideRecord('x_1158634_kb_int_0_cluster');
         if (!clusterGr.get(clusterSysId)) {
             gs.error('KBDraftBuilder: cluster not found ' + clusterSysId);
             return null;
@@ -43,7 +43,7 @@ KBDraftBuilder.prototype = {
 
         var parsed = this._parseLLMArticle(result.text);
 
-        var draftGr = new GlideRecord('x_kb_intel_kb_draft');
+        var draftGr = new GlideRecord('x_1158634_kb_int_0_kb_draft');
         draftGr.initialize();
         draftGr.setValue('title', parsed.title);
         draftGr.setValue('summary', parsed.summary);
@@ -60,7 +60,7 @@ KBDraftBuilder.prototype = {
         clusterGr.setValue('status', 'draft_pending');
         clusterGr.update();
 
-        gs.eventQueue('x_kb_intel.draft.created', null, sysId, 'cluster');
+        gs.eventQueue('x_1158634_kb_int_0.draft.created', null, sysId, 'cluster');
         return sysId;
     },
 
@@ -68,7 +68,7 @@ KBDraftBuilder.prototype = {
     // Public: build draft from developer capture
     // ============================================================
     buildFromDevCapture: function(captureSysId) {
-        var capGr = new GlideRecord('x_kb_intel_dev_capture');
+        var capGr = new GlideRecord('x_1158634_kb_int_0_dev_capture');
         if (!capGr.get(captureSysId)) {
             gs.error('KBDraftBuilder: dev capture not found ' + captureSysId);
             return null;
@@ -78,7 +78,7 @@ KBDraftBuilder.prototype = {
         var devOpsCommits = [];
         if (sourceType === 'story' && !capGr.source_story.nil()) {
             try {
-                devOpsCommits = new x_kb_intel.DevOpsContextFetcher().fetchForStory(capGr.getValue('source_story'));
+                devOpsCommits = new x_1158634_kb_int_0.DevOpsContextFetcher().fetchForStory(capGr.getValue('source_story'));
             } catch (e) {
                 // DevOps plugin may be absent — silent
             }
@@ -97,7 +97,7 @@ KBDraftBuilder.prototype = {
 
         var parsed = this._parseLLMArticle(result.text);
 
-        var draftGr = new GlideRecord('x_kb_intel_kb_draft');
+        var draftGr = new GlideRecord('x_1158634_kb_int_0_kb_draft');
         draftGr.initialize();
         draftGr.setValue('title', parsed.title);
         draftGr.setValue('summary', parsed.summary);
@@ -118,7 +118,7 @@ KBDraftBuilder.prototype = {
         capGr.setValue('state', 'processed');
         capGr.update();
 
-        gs.eventQueue('x_kb_intel.draft.created', null, sysId, sourceType === 'story' ? 'story' : 'dev_capture');
+        gs.eventQueue('x_1158634_kb_int_0.draft.created', null, sysId, sourceType === 'story' ? 'story' : 'dev_capture');
         return sysId;
     },
 

@@ -1,6 +1,6 @@
 /**
  * UI Action: Approve & Publish
- * Table: x_kb_intel_kb_draft
+ * Table: x_1158634_kb_int_0_kb_draft
  * Action name: approve_and_publish
  * Form button: true
  * Show insert: false
@@ -16,9 +16,9 @@
  * marks the source cluster (if any) as has_kb.
  */
 (function() {
-    var targetBase = gs.getProperty('x_kb_intel.target_kb_base');
+    var targetBase = gs.getProperty('x_1158634_kb_int_0.target_kb_base');
     if (!targetBase) {
-        gs.addErrorMessage('System property x_kb_intel.target_kb_base is not set. Set it to a kb_knowledge_base sys_id and retry.');
+        gs.addErrorMessage('System property x_1158634_kb_int_0.target_kb_base is not set. Set it to a kb_knowledge_base sys_id and retry.');
         action.setRedirectURL(current);
         return;
     }
@@ -46,7 +46,7 @@
 
     // Link cluster → KB so it shows as covered
     if (!current.source_cluster.nil()) {
-        var clusterGr = new GlideRecord('x_kb_intel_cluster');
+        var clusterGr = new GlideRecord('x_1158634_kb_int_0_cluster');
         if (clusterGr.get(current.getValue('source_cluster'))) {
             clusterGr.setValue('linked_kb', kbId);
             clusterGr.setValue('status', 'has_kb');

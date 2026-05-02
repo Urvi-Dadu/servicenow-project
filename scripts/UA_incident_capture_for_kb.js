@@ -11,20 +11,20 @@
  * Condition (in the "Condition" field):
  *   current.state == 6 || current.state == 7
  *
- * Creates a draft x_kb_intel_dev_capture pre-filled with incident data and
+ * Creates a draft x_1158634_kb_int_0_dev_capture pre-filled with incident data and
  * redirects the user to fill in the structured brief.
  */
 (function() {
-    var capGr = new GlideRecord('x_kb_intel_dev_capture');
+    var capGr = new GlideRecord('x_1158634_kb_int_0_dev_capture');
 
     // Avoid duplicate capture for the same incident
-    var existing = new GlideRecord('x_kb_intel_dev_capture');
+    var existing = new GlideRecord('x_1158634_kb_int_0_dev_capture');
     existing.addQuery('source_incident', current.getUniqueValue());
     existing.setLimit(1);
     existing.query();
     if (existing.next()) {
         gs.addInfoMessage('A capture already exists for this incident — opening it.');
-        action.setRedirectURL('x_kb_intel_dev_capture.do?sys_id=' + existing.getUniqueValue());
+        action.setRedirectURL('x_1158634_kb_int_0_dev_capture.do?sys_id=' + existing.getUniqueValue());
         return;
     }
 
@@ -37,5 +37,5 @@
     capGr.setValue('state', 'draft');
     var sysId = capGr.insert();
 
-    action.setRedirectURL('x_kb_intel_dev_capture.do?sys_id=' + sysId);
+    action.setRedirectURL('x_1158634_kb_int_0_dev_capture.do?sys_id=' + sysId);
 })();

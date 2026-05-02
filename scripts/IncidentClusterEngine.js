@@ -1,26 +1,26 @@
 /**
  * Script Include: IncidentClusterEngine
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: This application scope only
  * Active: true
  *
  * Groups closed incidents into clusters of similar issues.
  *
  * Primary path: Predictive Intelligence Cluster Solution (configured by name in
- *               system property x_kb_intel.cluster_solution_name).
+ *               system property x_1158634_kb_int_0.cluster_solution_name).
  * Fallback path: Keyword + category-based grouping in pure JS — runs if PI
  *                solution is missing or fails. Less accurate but always works.
  *
  * USAGE:
- *   var engine = new x_kb_intel.IncidentClusterEngine();
- *   engine.runClustering();   // upserts rows in x_kb_intel_cluster
+ *   var engine = new x_1158634_kb_int_0.IncidentClusterEngine();
+ *   engine.runClustering();   // upserts rows in x_1158634_kb_int_0_cluster
  */
 var IncidentClusterEngine = Class.create();
 IncidentClusterEngine.prototype = {
     initialize: function() {
-        this.solutionName = gs.getProperty('x_kb_intel.cluster_solution_name', 'incident_cluster_l2l3');
-        this.minClusterSize = parseInt(gs.getProperty('x_kb_intel.min_cluster_size', '5'), 10);
-        this.lookbackDays = parseInt(gs.getProperty('x_kb_intel.lookback_days', '365'), 10);
+        this.solutionName = gs.getProperty('x_1158634_kb_int_0.cluster_solution_name', 'incident_cluster_l2l3');
+        this.minClusterSize = parseInt(gs.getProperty('x_1158634_kb_int_0.min_cluster_size', '5'), 10);
+        this.lookbackDays = parseInt(gs.getProperty('x_1158634_kb_int_0.lookback_days', '365'), 10);
     },
 
     runClustering: function() {
@@ -109,7 +109,7 @@ IncidentClusterEngine.prototype = {
     },
 
     _upsertCluster: function(label, members) {
-        var clusterGr = new GlideRecord('x_kb_intel_cluster');
+        var clusterGr = new GlideRecord('x_1158634_kb_int_0_cluster');
         clusterGr.addQuery('name', label);
         clusterGr.query();
         var isNew = !clusterGr.next();

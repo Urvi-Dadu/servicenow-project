@@ -1,6 +1,6 @@
 /**
  * Script Include: LLMConnector  (Now Assist edition)
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: All application scopes
  * Active: true
  *
@@ -15,13 +15,13 @@
  * unchanged so KBDraftBuilder, smoke tests, and any other caller continue to
  * work without modification. The method is named callGemini for backward
  * compatibility — internally it now routes through Now Assist OneExtend when
- * the system property x_kb_intel.llm_provider = 'now_assist'.
+ * the system property x_1158634_kb_int_0.llm_provider = 'now_assist'.
  *
  * REQUIRED system properties (added in Phase 17.3):
- *   x_kb_intel.llm_provider              = 'now_assist'   (or 'gemini' to use legacy path)
- *   x_kb_intel.now_assist_capability_id  = <sys_id of the published capability>
+ *   x_1158634_kb_int_0.llm_provider              = 'now_assist'   (or 'gemini' to use legacy path)
+ *   x_1158634_kb_int_0.now_assist_capability_id  = <sys_id of the published capability>
  *
- * If x_kb_intel.llm_provider is anything other than 'now_assist', this connector
+ * If x_1158634_kb_int_0.llm_provider is anything other than 'now_assist', this connector
  * falls back to the original Gemini code path so the swap is reversible by just
  * flipping the property — no need to repaste the original script.
  *
@@ -39,12 +39,12 @@
 var LLMConnector = Class.create();
 LLMConnector.prototype = {
     initialize: function() {
-        this.provider = gs.getProperty('x_kb_intel.llm_provider', 'gemini');
-        this.capabilityId = gs.getProperty('x_kb_intel.now_assist_capability_id', '');
-        this.defaultModel = gs.getProperty('x_kb_intel.default_model', 'gemini-2.5-flash');
+        this.provider = gs.getProperty('x_1158634_kb_int_0.llm_provider', 'gemini');
+        this.capabilityId = gs.getProperty('x_1158634_kb_int_0.now_assist_capability_id', '');
+        this.defaultModel = gs.getProperty('x_1158634_kb_int_0.default_model', 'gemini-2.5-flash');
 
         // For Gemini fallback path
-        this.apiKeyProperty = 'x_kb_intel.gemini_api_key';
+        this.apiKeyProperty = 'x_1158634_kb_int_0.gemini_api_key';
         this.endpointBase = 'https://generativelanguage.googleapis.com/v1beta/models/';
     },
 
@@ -70,7 +70,7 @@ LLMConnector.prototype = {
     // ============================================================
     _callNowAssist: function(systemPrompt, userPrompt, options) {
         if (!this.capabilityId) {
-            gs.error('LLMConnector: x_kb_intel.now_assist_capability_id is not set');
+            gs.error('LLMConnector: x_1158634_kb_int_0.now_assist_capability_id is not set');
             return null;
         }
 
@@ -187,7 +187,7 @@ LLMConnector.prototype = {
     },
 
     // ============================================================
-    // Gemini fallback path (kept so flipping x_kb_intel.llm_provider
+    // Gemini fallback path (kept so flipping x_1158634_kb_int_0.llm_provider
     // back to 'gemini' does not require repasting the original script)
     // ============================================================
     _callGeminiHttp: function(systemPrompt, userPrompt, options) {
@@ -244,7 +244,7 @@ LLMConnector.prototype = {
             gs.error('LLMConnector: HTTP ' + resp.status + ' — ' + resp.bodyText);
             return null;
         }
-        gs.eventQueue('x_kb_intel.daily_cap_hit', null, model, 'LLMConnector');
+        gs.eventQueue('x_1158634_kb_int_0.daily_cap_hit', null, model, 'LLMConnector');
         return null;
     },
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  UI Macro: x_kb_intel_suggestions
+  UI Macro: x_1158634_kb_int_0_suggestions
   Application: KB Intelligence
 
   Renders a side-panel formatter on the incident form showing the most recent
@@ -9,21 +9,21 @@
 
   Steps to install:
     1. System UI → UI Macros → New
-       Name: x_kb_intel_suggestions
+       Name: x_1158634_kb_int_0_suggestions
        Application: KB Intelligence (must be in this scope)
        XML: paste the entire <j:jelly> block below
        Active: true
     2. System UI → Formatters → New
        Name: KB Intelligence Suggestions
        Table: incident
-       Formatter: x_kb_intel_suggestions
+       Formatter: x_1158634_kb_int_0_suggestions
     3. Configure form layout for incident → drag the formatter onto the form
        (or place via Form Layout's Available list).
 -->
 <j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
   <g:evaluate var="jvar_suggestions" jelly="true">
     var out = [];
-    var gr = new GlideRecord('x_kb_intel_suggestion_log');
+    var gr = new GlideRecord('x_1158634_kb_int_0_suggestion_log');
     gr.addQuery('incident', current.sys_id);
     gr.orderByDesc('suggested_at');
     gr.setLimit(1);

@@ -205,7 +205,7 @@ ARTICLE BODY:
 Free tier of `gemini-2.5-flash` is **15 requests per minute, 1500 per day**. The `LLMConnector` Script Include implements:
 
 - **Exponential backoff** on HTTP 429 (rate-limited): wait 4s, 8s, 16s, then fail.
-- **Daily-cap awareness**: `gs.eventQueue('x_kb_intel.daily_cap_hit')` fires when 429s persist after backoff — alerts admin via notification.
+- **Daily-cap awareness**: `gs.eventQueue('x_1158634_kb_int_0.daily_cap_hit')` fires when 429s persist after backoff — alerts admin via notification.
 - **Per-cluster spacing**: the scheduled job inserts a 5-second sleep (`gs.sleep(5000)`) between draft generations to stay well under the 15 RPM cap.
 
-For the **story-closure path**, which uses `gemini-2.5-pro` (5 RPM, 100/day free), the Business Rule is async, so a per-story burst won't slam the limit. If you have >100 story closures per day, switch `x_kb_intel.story_model` system property back to `gemini-2.5-flash`.
+For the **story-closure path**, which uses `gemini-2.5-pro` (5 RPM, 100/day free), the Business Rule is async, so a per-story burst won't slam the limit. If you have >100 story closures per day, switch `x_1158634_kb_int_0.story_model` system property back to `gemini-2.5-flash`.

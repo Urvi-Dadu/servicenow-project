@@ -1,6 +1,6 @@
 /**
  * Script Action: Story Capture Request Notification
- * Event name: x_kb_intel.story.capture_request
+ * Event name: x_1158634_kb_int_0.story.capture_request
  * Active: true
  *
  * Triggered by BR_story_closure_capture when a story is completed.
@@ -19,10 +19,10 @@
     var dev = new GlideRecord('sys_user');
     if (!dev.get(developerSysId) || !dev.getValue('email')) return;
 
-    var capGr = new GlideRecord('x_kb_intel_dev_capture');
+    var capGr = new GlideRecord('x_1158634_kb_int_0_dev_capture');
     if (!capGr.get(captureId)) return;
 
-    var url = gs.getProperty('glide.servlet.uri') + 'x_kb_intel_dev_capture.do?sys_id=' + captureId;
+    var url = gs.getProperty('glide.servlet.uri') + 'x_1158634_kb_int_0_dev_capture.do?sys_id=' + captureId;
     var subject = '[KB Intelligence] 2-minute brief: capture knowledge for ' + capGr.getValue('problem_brief').substring(0, 80);
     var body = [
         'Hi ' + dev.getValue('first_name') + ',',
@@ -36,7 +36,7 @@
         '',
         'When you click "Submit for KB Generation", the LLM will draft a full KB article from your brief inputs and route it to Knowledge Managers for review. You\'ll be credited as the resolver.',
         '',
-        '— KB Intelligence (x_kb_intel)'
+        '— KB Intelligence (x_1158634_kb_int_0)'
     ].join('\n');
 
     var mail = new GlideEmailOutbound();

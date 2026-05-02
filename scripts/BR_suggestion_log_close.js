@@ -20,7 +20,7 @@
     if (newState !== '6' && newState !== '7') return;
     if (previous && (previous.getValue('state') === '6' || previous.getValue('state') === '7')) return;
 
-    var logGr = new GlideRecord('x_kb_intel_suggestion_log');
+    var logGr = new GlideRecord('x_1158634_kb_int_0_suggestion_log');
     logGr.addQuery('incident', current.getUniqueValue());
     logGr.orderByDesc('suggested_at');
     logGr.setLimit(1);

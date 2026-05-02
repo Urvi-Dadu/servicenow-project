@@ -1,13 +1,13 @@
 /**
  * Script Include: LLMConnector
- * Application: KB Intelligence (x_kb_intel)
+ * Application: KB Intelligence (x_1158634_kb_int_0)
  * Accessible from: All application scopes
  * Active: true
  *
  * Wraps the Google Gemini generateContent API.
  *
  * USAGE:
- *   var llm = new x_kb_intel.LLMConnector();
+ *   var llm = new x_1158634_kb_int_0.LLMConnector();
  *   var result = llm.callGemini(systemPrompt, userPrompt, {
  *       model: 'gemini-2.5-flash',
  *       maxTokens: 4096,
@@ -20,15 +20,15 @@
  *   }
  *
  * REQUIRED system properties:
- *   x_kb_intel.gemini_api_key   — your AIza... key (password type)
- *   x_kb_intel.default_model    — e.g. "gemini-2.5-flash"
+ *   x_1158634_kb_int_0.gemini_api_key   — your AIza... key (password type)
+ *   x_1158634_kb_int_0.default_model    — e.g. "gemini-2.5-flash"
  */
 var LLMConnector = Class.create();
 LLMConnector.prototype = {
     initialize: function() {
-        this.apiKeyProperty = 'x_kb_intel.gemini_api_key';
+        this.apiKeyProperty = 'x_1158634_kb_int_0.gemini_api_key';
         this.endpointBase = 'https://generativelanguage.googleapis.com/v1beta/models/';
-        this.defaultModel = gs.getProperty('x_kb_intel.default_model', 'gemini-2.5-flash');
+        this.defaultModel = gs.getProperty('x_1158634_kb_int_0.default_model', 'gemini-2.5-flash');
     },
 
     /**
@@ -110,7 +110,7 @@ LLMConnector.prototype = {
         }
 
         // Exhausted retries
-        gs.eventQueue('x_kb_intel.daily_cap_hit', null, model, 'LLMConnector');
+        gs.eventQueue('x_1158634_kb_int_0.daily_cap_hit', null, model, 'LLMConnector');
         gs.error('LLMConnector: exhausted retries on rate limit. Daily cap may be reached for ' + model);
         return null;
     },

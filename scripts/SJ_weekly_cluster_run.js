@@ -11,17 +11,17 @@
  *    free-tier rate limit (15 RPM).
  */
 (function() {
-    var minSize = parseInt(gs.getProperty('x_kb_intel.min_cluster_size', '5'), 10);
+    var minSize = parseInt(gs.getProperty('x_1158634_kb_int_0.min_cluster_size', '5'), 10);
 
     gs.info('SJ_weekly_cluster_run: starting cluster refresh');
-    var engine = new x_kb_intel.IncidentClusterEngine();
+    var engine = new x_1158634_kb_int_0.IncidentClusterEngine();
     var n = engine.runClustering();
     gs.info('SJ_weekly_cluster_run: ' + n + ' clusters refreshed');
 
-    var builder = new x_kb_intel.KBDraftBuilder();
+    var builder = new x_1158634_kb_int_0.KBDraftBuilder();
     var generated = 0;
 
-    var gapGr = new GlideRecord('x_kb_intel_cluster');
+    var gapGr = new GlideRecord('x_1158634_kb_int_0_cluster');
     gapGr.addQuery('status', 'open');
     gapGr.addQuery('member_count', '>=', minSize);
     gapGr.orderByDesc('member_count'); // tackle biggest gaps first
@@ -30,7 +30,7 @@
 
     while (gapGr.next()) {
         // Skip if a non-rejected draft already exists
-        var existing = new GlideRecord('x_kb_intel_kb_draft');
+        var existing = new GlideRecord('x_1158634_kb_int_0_kb_draft');
         existing.addQuery('source_cluster', gapGr.getUniqueValue());
         existing.addQuery('review_state', 'IN', 'draft,in_review,approved,published');
         existing.setLimit(1);
