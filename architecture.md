@@ -68,7 +68,7 @@
 | `ResolutionSuggester`              | Script Include        | On new incident, finds top-N similar resolved incidents              |
 | `DevOpsContextFetcher`             | Script Include        | (Stretch) Pulls commits/files linked to a story                      |
 | `x_1158634_kb_int_0_cluster`               | Custom table          | One row per detected cluster of similar incidents                    |
-| `x_1158634_kb_int_0_dev_capture`           | Custom table          | Developer's structured brief (inputs to LLM)                         |
+| `x_1158634_kb_int_0_developer_capture`           | Custom table          | Developer's structured brief (inputs to LLM)                         |
 | `x_1158634_kb_int_0_kb_draft`              | Custom table          | LLM-generated draft awaiting review                                  |
 | `x_1158634_kb_int_0_suggestion_log`        | Custom table          | Audit log of suggestions for measurement                             |
 | `BR_incident_assignment_suggest`   | Business Rule         | On assignment_group change → run ResolutionSuggester                 |

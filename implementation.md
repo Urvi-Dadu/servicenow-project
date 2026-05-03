@@ -99,7 +99,7 @@ L2/L3 engineer sees side panel: "Similar Past Resolutions"
    "Capture for KB"                       [BR_story_closure_capture async]
    UI Action click                                   │
           │                                          ▼
-          └────────→ x_1158634_kb_int_0_dev_capture ◀─── pre-fills problem_brief
+          └────────→ x_1158634_kb_int_0_developer_capture ◀─── pre-fills problem_brief
                             │
                             ▼
                 Developer fills 5–9 fields
@@ -192,10 +192,10 @@ Detailed field-by-field reference is in [data-model.md](data-model.md). Below is
 - Add columns per [data-model.md § Table 1](data-model.md#table-1-x_1158634_kb_int_0_cluster).
 - For the `status` choice column, add the choice list: `open`, `has_kb`, `dismissed`, `draft_pending`.
 
-### 3.2 Table: `dev_capture` → becomes `x_1158634_kb_int_0_dev_capture`
+### 3.2 Table: `dev_capture` → becomes `x_1158634_kb_int_0_developer_capture`
 
 - Label: **Developer Capture**
-- Add columns per [data-model.md § Table 2](data-model.md#table-2-x_1158634_kb_int_0_dev_capture).
+- Add columns per [data-model.md § Table 2](data-model.md#table-2-x_1158634_kb_int_0_developer_capture).
 - For `state` choice column: `draft`, `submitted`, `processed`, `cancelled`.
 - For `source_type` choice column: `story`, `incident`, `problem`.
 - After saving, open the table form layout and arrange the fields into sections: **Source**, **Problem & Resolution**, **Changes** (workflow / scripts / configs toggles + their detail strings), **Validation**, **Related & State**.
@@ -221,8 +221,8 @@ Open each new table → **Access Controls** related list and create:
 | --------------------------- | --------- | ---------------------- |
 | `x_1158634_kb_int_0_cluster`        | read      | itil OR knowledge_manager |
 | `x_1158634_kb_int_0_cluster`        | write     | knowledge_manager OR admin |
-| `x_1158634_kb_int_0_dev_capture`    | read      | itil                   |
-| `x_1158634_kb_int_0_dev_capture`    | write     | itil                   |
+| `x_1158634_kb_int_0_developer_capture`    | read      | itil                   |
+| `x_1158634_kb_int_0_developer_capture`    | write     | itil                   |
 | `x_1158634_kb_int_0_kb_draft`       | read      | knowledge_manager OR admin |
 | `x_1158634_kb_int_0_kb_draft`       | write     | knowledge_manager OR admin |
 | `x_1158634_kb_int_0_suggestion_log` | read      | itil                   |
@@ -553,7 +553,7 @@ Lets an L2/L3 engineer who just resolved a complex incident capture deep technic
 1. **System UI → UI Actions → New**
 2. Settings:
    - **Name:** `Submit for KB Generation`
-   - **Table:** `x_1158634_kb_int_0_dev_capture`
+   - **Table:** `x_1158634_kb_int_0_developer_capture`
    - **Action name:** `submit_for_kb_generation`
    - **Form button:** ✓
    - **Show update:** ✓
@@ -567,7 +567,7 @@ Lets an L2/L3 engineer who just resolved a complex incident capture deep technic
 1. **System Definition → Business Rules → New**
 2. Settings:
    - **Name:** `Dev Capture Submitted → Generate Draft`
-   - **Table:** `x_1158634_kb_int_0_dev_capture`
+   - **Table:** `x_1158634_kb_int_0_developer_capture`
    - **When:** after, **Update:** ✓
    - **Async:** ✓
    - **Filter conditions:** `State changes to submitted`
@@ -633,7 +633,7 @@ Note the value for "Complete" or "Closed Complete" (commonly `'4'` or `'closed_c
 
 **System Policy → Events → Registry → New**:
 - **Event name:** `x_1158634_kb_int_0.story.capture_request`
-- **Table:** `x_1158634_kb_int_0_dev_capture`
+- **Table:** `x_1158634_kb_int_0_developer_capture`
 
 #### 12.4.2 Script Action
 
@@ -646,7 +646,7 @@ Note the value for "Complete" or "Closed Complete" (commonly `'4'` or `'closed_c
 
 1. Open any open story in `rm_story.list`.
 2. Set **State** = Complete → Save.
-3. Wait a few seconds. Check **x_1158634_kb_int_0_dev_capture** list — there should be a new row with `source_type=story`, `source_story` set to your story, `state=draft`.
+3. Wait a few seconds. Check **x_1158634_kb_int_0_developer_capture** list — there should be a new row with `source_type=story`, `source_story` set to your story, `state=draft`.
 4. The developer (whoever was `assigned_to` on the story) should receive an email pointing to the capture form.
 5. Open the capture form, fill in a brief, click **Submit for KB Generation**.
 6. Wait ~30s — the generated draft is linked back via `generated_draft`.

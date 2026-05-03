@@ -19,10 +19,10 @@
     var dev = new GlideRecord('sys_user');
     if (!dev.get(developerSysId) || !dev.getValue('email')) return;
 
-    var capGr = new GlideRecord('x_1158634_kb_int_0_dev_capture');
+    var capGr = new GlideRecord('x_1158634_kb_int_0_developer_capture');
     if (!capGr.get(captureId)) return;
 
-    var url = gs.getProperty('glide.servlet.uri') + 'x_1158634_kb_int_0_dev_capture.do?sys_id=' + captureId;
+    var url = gs.getProperty('glide.servlet.uri') + 'x_1158634_kb_int_0_developer_capture.do?sys_id=' + captureId;
     var subject = '[KB Intelligence] 2-minute brief: capture knowledge for ' + capGr.getValue('problem_brief').substring(0, 80);
     var body = [
         'Hi ' + dev.getValue('first_name') + ',',

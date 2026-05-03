@@ -1,6 +1,6 @@
 /**
  * UI Action: Submit for KB Generation
- * Table: x_1158634_kb_int_0_dev_capture
+ * Table: x_1158634_kb_int_0_developer_capture
  * Action name: submit_for_kb_generation
  * Form button: true
  * Show insert: false

@@ -1,6 +1,6 @@
 /**
  * Business Rule: Dev Capture Submitted → Generate Draft
- * Table: x_1158634_kb_int_0_dev_capture
+ * Table: x_1158634_kb_int_0_developer_capture
  * When: after
  * Update: true
  * Order: 1000

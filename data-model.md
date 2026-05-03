@@ -34,7 +34,7 @@ draft_pending  — draft generated, awaiting review
 
 ---
 
-## Table 2: `x_1158634_kb_int_0_dev_capture`
+## Table 2: `x_1158634_kb_int_0_developer_capture`
 
 **Label:** Developer Capture
 **Extends:** None
@@ -86,7 +86,7 @@ cancelled   — abandoned
 | Source cluster        | `source_cluster`        | Reference           | → `x_1158634_kb_int_0_cluster`            |                                    |
 | Source story          | `source_story`          | Reference           | → `rm_story`                      |                                    |
 | Source incident       | `source_incident`       | Reference           | → `incident`                      |                                    |
-| Source dev capture    | `source_dev_capture`    | Reference           | → `x_1158634_kb_int_0_dev_capture`        |                                    |
+| Source dev capture    | `source_dev_capture`    | Reference           | → `x_1158634_kb_int_0_developer_capture`        |                                    |
 | Resolver              | `resolver`              | Reference           | → `sys_user`                      | Author / authority                 |
 | Review state          | `review_state`          | Choice              | draft / in_review / approved / rejected / published | See below |
 | Published KB          | `published_kb`          | Reference           | → `kb_knowledge`                  | Set when approved & published      |
@@ -166,9 +166,9 @@ Created in Phase 4 via **System Properties → New** (within scoped app):
 ```
 incident ─────────┐
                   ├──→ x_1158634_kb_int_0_cluster ──→ x_1158634_kb_int_0_kb_draft ──→ kb_knowledge
-                  ├──→ x_1158634_kb_int_0_dev_capture ──┘
+                  ├──→ x_1158634_kb_int_0_developer_capture ──┘
 rm_story ─────────┤
-                  └──→ x_1158634_kb_int_0_dev_capture ──→ x_1158634_kb_int_0_kb_draft ──→ kb_knowledge
+                  └──→ x_1158634_kb_int_0_developer_capture ──→ x_1158634_kb_int_0_kb_draft ──→ kb_knowledge
 
 incident ──→ x_1158634_kb_int_0_suggestion_log ──→ kb_knowledge (accepted)
 ```

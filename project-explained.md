@@ -210,7 +210,7 @@ Four custom tables were created inside our scoped app. Think of them as the data
 - `linked_kb` — if a KB article already covers this cluster, link it here so the job doesn't regenerate
 - `status` — `open` (needs a KB), `has_kb` (covered), `dismissed` (KM said not worth it), `draft_pending` (LLM has produced a draft, awaiting review)
 
-### `x_1158634_kb_int_0_dev_capture` — Developer Capture
+### `x_1158634_kb_int_0_developer_capture` — Developer Capture
 
 **Purpose:** The structured form an engineer/developer fills out after resolving an incident or closing a story. This is the "developer feedback" form that feeds the AI.
 
@@ -686,7 +686,7 @@ KBDraftBuilder.buildFromCluster()                                  │
      │       │                          │                          │
      │       └──────────────┬───────────┘                          │
      │                      ▼                                       │
-     │            x_1158634_kb_int_0_dev_capture                    │
+     │            x_1158634_kb_int_0_developer_capture                    │
      │                      │                                       │
      │                      │ "Submit for KB Generation"            │
      │                      ▼                                       │

@@ -68,7 +68,7 @@ KBDraftBuilder.prototype = {
     // Public: build draft from developer capture
     // ============================================================
     buildFromDevCapture: function(captureSysId) {
-        var capGr = new GlideRecord('x_1158634_kb_int_0_dev_capture');
+        var capGr = new GlideRecord('x_1158634_kb_int_0_developer_capture');
         if (!capGr.get(captureSysId)) {
             gs.error('KBDraftBuilder: dev capture not found ' + captureSysId);
             return null;
