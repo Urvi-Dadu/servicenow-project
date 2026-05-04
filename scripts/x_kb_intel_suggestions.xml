@@ -1,99 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  UI Macro: x_1158634_kb_int_0_suggestions
-  Application: KB Intelligence (x_1158634_kb_int_0)
+  UI Macro: kb_intel_suggestion_panel
+  Application: GLOBAL  (recommended) — but works in any scope because there is
+                                       no `current` reference, no GlideRecord.
 
-  Renders a side-panel formatter on the incident form showing the most recent
-  suggestions logged by ResolutionSuggester. Add this as a Form Layout
-  "Formatter" element on the incident form.
+  REPLACES the old Jelly-evaluate macro that broke across scopes.
 
-  FIX NOTES:
-    - In a Formatter <g:evaluate> block, current.sys_id is a GlideElement, not a
-      String. Passing it directly to GlideRecord.addQuery() can fail to match
-      because the comparison stringifies inconsistently. We coerce to string via
-      .toString() before querying.
-    - In some form layouts (especially when the formatter renders before the
-      record is fully loaded), `current` can be undefined. We fall back to the
-      URL parameter sys_id via RP.getParameterValue('sys_id').
-    - The debug comment at the top of the rendered HTML shows the sys_id we
-      resolved — useful for diagnosing "no suggestions" issues.
+  This macro is now intentionally DUMB — it just renders an empty placeholder
+  div with id="kbi_panel". The Client Script "KB Intel — Load Suggestions"
+  (CS_incident_suggestions_load.js) finds the div by id, calls the
+  SuggestionAjax Script Include via GlideAjax, and fills it with HTML.
+
+  Why this works where the old approach failed:
+    - No <g:evaluate> block → no Jelly server-side evaluation needed
+    - No `current` reference → no cross-scope binding issues
+    - No GlideRecord call from Jelly → no scope-related access failures
+    - The Client Script reads g_form.getUniqueValue() which is reliable in
+      any scope, and GlideAjax is the official cross-scope contract.
 
   Steps to install:
-    1. System UI → UI Macros → New
-       Name: x_1158634_kb_int_0_suggestions
-       Application: KB Intelligence (must be in this scope)
-       XML: paste the entire <j:jelly> block below
+    1. (Optional) Switch application picker to GLOBAL — for safety, since the
+       formatter renders on a Global table. Works in scoped app too if you
+       prefer to keep it in KB Intelligence.
+    2. System UI → UI Macros → New
+       Name: kb_intel_suggestion_panel
        Active: true
-    2. System UI → Formatters → New
+       XML: paste the entire <j:jelly> block below
+    3. System UI → Formatters → New
        Name: KB Intelligence Suggestions
        Table: incident
-       Formatter: x_1158634_kb_int_0_suggestions
-    3. Configure form layout for incident → drag the formatter onto the form.
+       Formatter: kb_intel_suggestion_panel
+    4. Configure form layout for incident → add the formatter near the top.
+
+  If the formatter is missing from the form layout, the Client Script will
+  create the panel dynamically and inject it above the form fields — so this
+  macro is technically optional. Use it for explicit placement control.
 -->
-<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
-  <g:evaluate var="jvar_kbi_data" jelly="true">
-    var data = { sysid: '', suggestions: [], debug: '' };
-
-    // Resolve the incident sys_id — try `current` first, then URL parameter
-    if (typeof current !== 'undefined' &amp;&amp; current &amp;&amp; current.sys_id) {
-      data.sysid = current.sys_id.toString();
-      data.debug = 'from current';
-    } else if (typeof RP !== 'undefined' &amp;&amp; RP) {
-      data.sysid = (RP.getParameterValue('sys_id') || '').toString();
-      data.debug = 'from RP';
-    }
-
-    if (data.sysid) {
-      var gr = new GlideRecord('x_1158634_kb_int_0_suggestion_log');
-      gr.addQuery('incident', data.sysid);
-      gr.orderByDesc('suggested_at');
-      gr.setLimit(1);
-      gr.query();
-      if (gr.next()) {
-        try {
-          data.suggestions = JSON.parse(gr.getValue('suggested_kbs') || '[]');
-        } catch (e) {
-          data.debug += ' | parse error: ' + e.message;
-        }
-      } else {
-        data.debug += ' | no log row';
-      }
-    } else {
-      data.debug = 'no sys_id resolved';
-    }
-
-    data;
-  </g:evaluate>
-
-  <div style="border:1px solid #d0d7de;padding:12px;border-radius:6px;background:#f6f8fa;margin-bottom:8px;">
-    <h4 style="margin:0 0 8px 0;color:#0969da;">⚡ Similar Past Resolutions (L2 / L3 Hint)</h4>
-
-    <!-- Debug line — comment out the next line in production -->
-    <div style="font-size:0.75em;color:#999;margin-bottom:6px;">debug: sysid=${jvar_kbi_data.sysid} (${jvar_kbi_data.debug})</div>
-
-    <j:if test="${empty(jvar_kbi_data.suggestions)}">
-      <em style="color:#57606a;">No suggestions yet — assign to a group, save the form, then refresh to trigger.</em>
-    </j:if>
-
-    <j:forEach var="jvar_sug" items="${jvar_kbi_data.suggestions}">
-      <div style="margin-bottom:10px;border-left:3px solid #0969da;padding-left:8px;">
-        <div>
-          <strong>
-            <a href="incident.do?sys_id=${jvar_sug.incident_sys_id}" target="_blank">${jvar_sug.incident_number}</a>
-          </strong>
-          <span style="color:#57606a;font-size:0.9em;"> (similarity ${jvar_sug.score})</span>
-        </div>
-        <div style="margin:4px 0;">${jvar_sug.short_description}</div>
-        <details style="margin-top:4px;">
-          <summary style="cursor:pointer;color:#57606a;">Resolution notes</summary>
-          <pre style="white-space:pre-wrap;background:#fff;padding:8px;border:1px solid #eee;border-radius:4px;font-size:0.9em;">${jvar_sug.close_notes}</pre>
-        </details>
-        <j:if test="${!empty(jvar_sug.kb_sys_id)}">
-          <div style="margin-top:4px;">
-            <a href="kb_view.do?sysparm_article=${jvar_sug.kb_sys_id}" target="_blank">📖 View linked KB →</a>
-          </div>
-        </j:if>
-      </div>
-    </j:forEach>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide">
+  <div id="kbi_panel" style="border:1px solid #d0d7de;padding:12px;border-radius:6px;background:#f6f8fa;margin:10px 0;">
+    <em style="color:#57606a;">Loading similar past resolutions…</em>
   </div>
 </j:jelly>

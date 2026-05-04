@@ -78,7 +78,9 @@
 | `UA_devcapture_submit`             | UI Action             | "Submit for KB Generation" on dev_capture form                       |
 | `UA_kbdraft_approve`               | UI Action             | "Approve & Publish" on draft → creates kb_knowledge                  |
 | `SJ_weekly_cluster_run`            | Scheduled Job         | Weekly: rerun clustering + generate drafts for new gaps              |
-| `x_1158634_kb_int_0_suggestions` (formatter)| UI Macro             | Renders suggestion side panel on incident form                       |
+| `SuggestionAjax`                   | Script Include (Client callable) | AJAX endpoint — returns suggestion JSON to the Client Script    |
+| `kb_intel_suggestion_panel` (Global) | UI Macro + Formatter | Static placeholder `<div id="kbi_panel">` — no `current` logic       |
+| `CS_incident_suggestions_load`     | Client Script (onLoad on `incident`) | Calls SuggestionAjax via GlideAjax, builds HTML, fills the placeholder |
 
 ## Tech stack quick reference
 

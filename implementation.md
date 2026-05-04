@@ -470,15 +470,27 @@ Pick any draft → open → click **Approve & Publish**. You should:
 
 ## Phase 10 — Resolution Suggester on incident form (L2/L3 core value)
 
-This is the daily-driver feature for L2/L3 engineers. When an incident lands in your queue, the form already shows the top 3 similar past resolutions.
+This is the daily-driver feature for L2/L3 engineers. When an incident lands in your queue, the form shows the top 3 similar past resolutions.
 
-### 10.1 Create the Business Rule
+> **Architecture note:** Earlier versions of this guide used a Jelly-based UI Macro that read `current.sys_id` directly. **That approach is unreliable across scopes** — when a UI Macro lives in a scoped app and renders as a Formatter on a Global-scope table (like `incident`), `current` does not consistently bind in the macro's evaluation context. The current architecture splits responsibilities: a passive HTML placeholder, a Script Include AJAX endpoint, and a Client Script that does the rendering. This is the standard ServiceNow pattern and works regardless of scope.
+
+### Architecture summary
+
+| Component | Where | What it does |
+| --------- | ----- | ------------ |
+| `BR_incident_assignment_suggest` | Global (Business Rule on `incident`) | Async — when assignment_group changes, calls `ResolutionSuggester` to write a row in `suggestion_log` |
+| `SuggestionAjax` | KB Intelligence scope (Script Include, **Client callable**) | AJAX endpoint — returns suggestion JSON for a given incident sys_id |
+| `kb_intel_suggestion_panel` (UI Macro + Formatter) | Global | Static placeholder `<div id="kbi_panel">` — has NO logic, no `current` reference |
+| `CS_incident_suggestions_load` | Global (Client Script on `incident`, onLoad) | Calls `SuggestionAjax` via GlideAjax, builds the panel HTML, injects into the placeholder |
+| `BR_suggestion_log_close` | Global (Business Rule on `incident`) | On close, fills `resolution_minutes` for measurement |
+
+### 10.1 Create the assignment-suggest Business Rule
 
 1. **System Definition → Business Rules → New**
-2. **Application:** KB Intelligence
+2. **Application:** Global *(BRs on `incident` automatically go to Global)*
 3. Settings:
    - **Name:** `Suggest Resolution on Assignment`
-   - **Table:** `incident`  *(yes, a Global-scope table — that's why `ResolutionSuggester` is "Accessible from: All application scopes")*
+   - **Table:** `incident`
    - **When:** after
    - **Insert:** ✓, **Update:** ✓
    - **Order:** `1000`
@@ -488,44 +500,109 @@ This is the daily-driver feature for L2/L3 engineers. When an incident lands in 
 4. **Advanced → Script:** paste [scripts/BR_incident_assignment_suggest.js](scripts/BR_incident_assignment_suggest.js)
 5. **Save**.
 
-### 10.2 Create the UI Macro
+### 10.2 Create the SuggestionAjax Script Include
 
-1. **System UI → UI Macros → New**
-2. **Name:** `x_1158634_kb_int_0_suggestions`
-3. **Application:** KB Intelligence
-4. **Active:** ✓
-5. **XML:** paste contents of [scripts/x_1158634_kb_int_0_suggestions.xml](scripts/x_1158634_kb_int_0_suggestions.xml)
+This is the server endpoint the Client Script will call.
 
-### 10.3 Create the Formatter
+1. Switch application picker to **KB Intelligence**.
+2. **System Definition → Script Includes → New**
+3. Settings:
+   - **Name:** `SuggestionAjax`
+   - **Application:** KB Intelligence (`x_1158634_kb_int_0`)
+   - **Accessible from:** **All application scopes** ← critical
+   - **Client callable:** ✓ ← critical (this checkbox MUST be ticked)
+   - **Active:** ✓
+4. **Script:** paste [scripts/SuggestionAjax.js](scripts/SuggestionAjax.js)
+5. **Save**.
 
-1. **System UI → Formatters → New**
-2. **Name:** `KB Intelligence Suggestions`
-3. **Table:** `incident`
-4. **Formatter:** `x_1158634_kb_int_0_suggestions`
+### 10.3 Create the placeholder UI Macro
 
-### 10.4 Add the formatter to the incident form
+This macro is now intentionally trivial — just an empty `<div>` with no logic. The Client Script in step 10.6 fills it.
+
+1. Switch application picker to **Global** *(safest — Global macros render reliably on Global-scope forms)*.
+2. **System UI → UI Macros → New**
+3. Settings:
+   - **Name:** `kb_intel_suggestion_panel`
+   - **Application:** Global
+   - **Active:** ✓
+4. **XML:** paste contents of [scripts/x_kb_intel_suggestions.xml](scripts/x_kb_intel_suggestions.xml)
+5. **Save**.
+
+### 10.4 Create the Formatter
+
+1. **System UI → Formatters → New** (still in Global scope)
+2. Settings:
+   - **Name:** `KB Intelligence Suggestions`
+   - **Table:** `incident`
+   - **Formatter:** `kb_intel_suggestion_panel`
+   - **Application:** Global
+3. **Save**.
+
+### 10.5 Add the formatter to the incident form layout
 
 1. Open any incident.
 2. Form context menu (⋮ in header) → **Configure → Form Layout**.
-3. Find `KB Intelligence Suggestions` in **Available** → move to **Selected** → place near the top, above "Notes".
+3. Find `KB Intelligence Suggestions` in **Available** → move to **Selected** → place near the top.
 4. **Save**.
 
-### 10.5 Update suggestion log on close (for measurement)
+> If you skip this step, the Client Script will still render the panel by injecting it dynamically above the form. The formatter just gives you explicit, reliable placement.
+
+### 10.6 Create the Client Script (the actual renderer)
+
+1. **System Definition → Client Scripts → New** (still in Global)
+2. Settings:
+   - **Name:** `KB Intel — Load Suggestions`
+   - **Table:** `incident`
+   - **Application:** Global
+   - **Type:** `onLoad`
+   - **Active:** ✓
+   - **UI Type:** `All` (or `Desktop` if only classic UI is needed)
+3. **Script:** paste [scripts/CS_incident_suggestions_load.js](scripts/CS_incident_suggestions_load.js)
+4. **Save**.
+
+### 10.7 Update suggestion log on close (for measurement)
 
 1. **System Definition → Business Rules → New**
-2. **Name:** `Update Suggestion Log on Close`
-3. **Table:** `incident`
-4. **When:** after, **Update:** ✓
-5. **Order:** `2000`, **Async:** ✓
-6. **Filter conditions:** `State changes to Resolved` OR `State changes to Closed`
-7. **Script:** paste [scripts/BR_suggestion_log_close.js](scripts/BR_suggestion_log_close.js)
+2. Settings:
+   - **Name:** `Update Suggestion Log on Close`
+   - **Table:** `incident`
+   - **When:** after, **Update:** ✓
+   - **Order:** `2000`, **Async:** ✓
+   - **Filter conditions:** `State changes to Resolved` OR `State changes to Closed`
+3. **Script:** paste [scripts/BR_suggestion_log_close.js](scripts/BR_suggestion_log_close.js)
 
-### 10.6 Test
+### 10.8 Test end-to-end
 
 1. Open any in-progress incident.
-2. Change its assignment_group to a different group → save.
-3. Wait ~5 seconds (async), then refresh the form.
-4. The "Similar Past Resolutions" panel should populate with up to 3 cards.
+2. Change its `assignment_group` to a different group → **Save the form** (this triggers the async BR).
+3. Wait ~5 seconds.
+4. **Reload the incident form** in the browser (full reload, not save).
+5. The "Similar Past Resolutions" panel should appear at the top with up to 3 cards.
+
+If the panel says "No suggestions yet" but you know suggestions exist, click the **🔄 Refresh suggestions** button at the bottom of the panel — it forces a fresh `ResolutionSuggester` run for this incident and re-renders.
+
+### 10.9 Debug tips
+
+The Client Script writes errors to the **browser console** (F12 → Console). The panel itself shows a small grey debug line near the top — it tells you what the server returned. Common diagnoses:
+
+| Panel debug line says | What it means | Fix |
+| --------------------- | ------------- | --- |
+| `ok (3 suggestions)` | Working correctly | Hide the debug line — see 10.10 |
+| `no suggestion_log row for this incident` | Business Rule didn't fire OR is still pending async | Save the form again, wait, reload |
+| `no sysparm_incident_id` | `g_form.getUniqueValue()` returned empty | Only happens on a never-saved incident — save first |
+| `parse error: ...` | Server returned malformed JSON | Check **System Logs → Errors** for `SuggestionAjax` lines |
+| Panel never appears, console shows `404` | Script Include not "Client callable" OR not "All application scopes" | Re-open the SuggestionAjax record in step 10.2 and tick both |
+| Panel never appears, no console errors | Client Script not active, or `onLoad` blocked | Verify Client Script is **Active** and **Type=onLoad** |
+
+### 10.10 Hide the debug line for production
+
+In [scripts/CS_incident_suggestions_load.js](scripts/CS_incident_suggestions_load.js), find this line in `buildPanelHtml`:
+
+```javascript
+parts.push('<div style="font-size:0.75em;color:#999;margin-bottom:6px;">debug: ' + escapeHtml(debugInfo) + '</div>');
+```
+
+Comment it out (prepend `//`). Save the Client Script. The panel will now render cleanly without the diagnostic line.
 
 ---
 
